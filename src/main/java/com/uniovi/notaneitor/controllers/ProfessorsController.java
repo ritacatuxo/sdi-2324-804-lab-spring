@@ -2,11 +2,11 @@ package com.uniovi.notaneitor.controllers;
 
 import com.uniovi.notaneitor.entities.Professor;
 import com.uniovi.notaneitor.services.ProfessorsService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+@Controller
 public class ProfessorsController {
 
     private final ProfessorsService professorsService;
@@ -16,11 +16,18 @@ public class ProfessorsController {
     }
 
     // petición de añadir
-    @RequestMapping(value = "/professor/add", method = RequestMethod.POST)
-    public String addProfessor(@ModelAttribute Professor professor) {
-        professorsService.addProfessor(professor);
-        return "Professor " + professor.toString() + " added";
+    @RequestMapping(value = "/professor/add")
+    public String getProfessor() {
+        return "professor/add";
     }
+    @RequestMapping(value = "/professor/add", method = RequestMethod.POST)
+    public String setProfessor(@ModelAttribute Professor professor) {
+        professorsService.addProfessor(professor);
+        return "redirect:/professor/list";
+    }
+
+
+
 
     // petición de editar
     @RequestMapping(value = "/professor/edit/{id}")
@@ -45,17 +52,18 @@ public class ProfessorsController {
 
     // petición de listar
     @RequestMapping("/professor/list")
-    public String getList()
+    public String getList(Model model)
     {
-        return professorsService.getProfessors().toString();
+        model.addAttribute("professorsList", professorsService.getProfessors());
+        return "professor/list";
     }
+
 
     // petición de borrar
     @RequestMapping("/professor/delete/{id}")
     public String deleteProfessor(@PathVariable Long id){
         professorsService.deleteProfessor(id);
-        return "Professor deleted";
-
+        return "redirect:/professor/list";
     }
 
 }

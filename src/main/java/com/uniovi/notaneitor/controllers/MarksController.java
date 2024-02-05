@@ -21,7 +21,6 @@ public class MarksController {
     public String getList(Model model) {
         model.addAttribute("markList", marksService.getMarks());
         return "mark/list";
-        //Cómo es que list.html tiene acceso al objeto 'model' (y por tanto a markList)? si solo esta en el método getList(Model model)
     }
 
     @RequestMapping(value = "/mark/add")
