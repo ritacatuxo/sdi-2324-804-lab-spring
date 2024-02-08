@@ -2,6 +2,7 @@ package com.uniovi.notaneitor.controllers;
 
 import com.uniovi.notaneitor.entities.Professor;
 import com.uniovi.notaneitor.services.ProfessorsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class ProfessorsController {
 
-    private final ProfessorsService professorsService;
+    @Autowired
+    private ProfessorsService professorsService;
 
     public ProfessorsController(ProfessorsService professorsService) {
         this.professorsService = professorsService;
@@ -43,11 +45,9 @@ public class ProfessorsController {
 
     // petición de ver detalle de un profesor
     @RequestMapping("/professor/details/{id}")
-    public String getProfessorDetail(@PathVariable Long id) {
-        if(professorsService.getProfessor(id) == null)
-            return "No professor found";
-        else
-            return professorsService.getProfessor(id).toString();
+    public String getProfessorDetail(Model model, @PathVariable Long id) {
+        model.addAttribute("professor", professorsService.getProfessor(id));
+        return "professor/details";
     }
 
     // petición de listar
