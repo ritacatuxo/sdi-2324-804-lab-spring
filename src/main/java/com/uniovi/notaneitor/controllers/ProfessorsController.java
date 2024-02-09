@@ -31,17 +31,30 @@ public class ProfessorsController {
 
 
 
+
+
+
+
     // petición de editar
     @RequestMapping(value = "/professor/edit/{id}")
-    public String getEdit(@PathVariable Long id) {
-        return professorsService.getProfessor(id).toString();
+    public String getEdit(Model model, @PathVariable Long id) {
+        model.addAttribute("professor", professorsService.getProfessor(id));
+        return "professor/edit";
     }
 
-    @RequestMapping(value="/professor/edit/{id}", method=RequestMethod.POST)
-    public String setEdit(@ModelAttribute Professor professor, @PathVariable Long id){
-        professorsService.edit(id, professor);
-        return "Professor edited";
+    @RequestMapping(value="/professor/edit", method=RequestMethod.POST)
+    public String setEdit(@ModelAttribute Professor professor, @RequestParam Long id){
+        // Al editar el registro de un profesor NO enviará el identificador del registro
+        //en la URL, sino en el cuerpo del mensaje -> con esto se refiere a lo de request param???
+        professor.setId(id);
+        professorsService.addProfessor(professor);
+        return "redirect:/professor/details/"+id;
     }
+
+
+
+
+
 
     // petición de ver detalle de un profesor
     @RequestMapping("/professor/details/{id}")

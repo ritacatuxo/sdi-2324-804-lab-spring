@@ -56,8 +56,6 @@ public class MarksController {
     }
     @RequestMapping(value="/mark/edit/{id}", method=RequestMethod.POST)
     public String setEdit(@ModelAttribute Mark mark, @PathVariable Long id){
-        // de dónde sale el primer parametro? en que lugar se lo pasan?
-        // no entiendo lo de que ese mark (el primer parametro) sea el resultado del formulario de edit.html, ya que lo unico que mete el usuario es la descripcion y el score. en que lugar se crea el objeto en si?
         mark.setId(id);
         marksService.addMark(mark);
         return "redirect:/mark/details/"+id;
