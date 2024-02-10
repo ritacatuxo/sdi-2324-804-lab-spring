@@ -2,18 +2,19 @@ package com.uniovi.notaneitor.services;
 
 import com.uniovi.notaneitor.entities.Professor;
 import com.uniovi.notaneitor.repositories.ProfessorsRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ProfessorsService {
 
-    @Autowired
-    private ProfessorsRepository professorsRepository;
+    private final ProfessorsRepository professorsRepository;
+
+    public ProfessorsService(ProfessorsRepository professorsRepository) {
+        this.professorsRepository = professorsRepository;
+    }
 
     public List<Professor> getProfessors() {
         List<Professor> professors = new ArrayList<Professor>();
