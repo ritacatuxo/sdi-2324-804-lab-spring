@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.*;
 public class MarksController {
 
     // declarar que el servicio MarksService va a ser usado desde este controlador (Inyectar el servicio)
-    @Autowired
-    private MarksService marksService;
+    private final MarksService marksService;
 
+    public MarksController(MarksService marksService) {
+        this.marksService = marksService;
+    }
 
 
     // un método por cada URL a la que responde el controlador
@@ -49,6 +51,8 @@ public class MarksController {
 
     }
 
+    // petición edit
+
     @RequestMapping(value = "/mark/edit/{id}")
     public String getEdit(Model model, @PathVariable Long id) {
         model.addAttribute("mark", marksService.getMark(id));
@@ -60,5 +64,13 @@ public class MarksController {
         marksService.addMark(mark);
         return "redirect:/mark/details/"+id;
     }
+
+    @RequestMapping("/mark/list/update")
+    public String updateList(Model model){
+        // no retorna toda la vista, solamente el fragmento marksTable
+        model.addAttribute("markList", marksService.getMarks() );
+        return "mark/list :: marksTable";
+    }
+
 
 }
