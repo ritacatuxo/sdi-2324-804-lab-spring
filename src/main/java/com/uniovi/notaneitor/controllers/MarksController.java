@@ -3,9 +3,12 @@ package com.uniovi.notaneitor.controllers;
 import com.uniovi.notaneitor.entities.Mark;
 import com.uniovi.notaneitor.services.MarksService;
 import com.uniovi.notaneitor.services.UsersService;
+import com.uniovi.notaneitor.validators.MarkAddValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Controller // responde a peticiones Rest
@@ -14,14 +17,17 @@ public class MarksController {
     // Inyectamos el servicio por inyección basada en constructor
     private final MarksService marksService;
     private final UsersService usersService;
-    public MarksController(MarksService marksService, UsersService usersService) {
+    private final MarkAddValidator marksValidator;
+    public MarksController(MarksService marksService, UsersService usersService, MarkAddValidator marksValidator) {
         this.marksService = marksService;
         this.usersService = usersService;
+        this.marksValidator = marksValidator;
     }
 
 
 
     // un método por cada URL a la que responde el controlador
+
     @RequestMapping("/mark/list")
     public String getList(Model model) {
         model.addAttribute("markList", marksService.getMarks());
@@ -30,15 +36,24 @@ public class MarksController {
 
     @RequestMapping(value="/mark/add")
     public String getMark(Model model){
+        // creamos la mark que el usuario va a rellenar con los nuevos datos
+        model.addAttribute("mark", new Mark());
         model.addAttribute("usersList", usersService.getUsers());
         return "mark/add";
     }
 
     @RequestMapping(value = "/mark/add", method = RequestMethod.POST)
-    public String setMark(@ModelAttribute Mark mark) {
+    public String setMark(Model model, @Validated Mark mark, BindingResult result) {
+
+        marksValidator.validate(mark, result);
+        // si se produce un error redirigimos a la vista add otra vez
+        if(result.hasErrors()) {
+            model.addAttribute("usersList", usersService.getUsers());
+            return "mark/add";
+        }
+
         marksService.addMark(mark);
         return "redirect:/mark/list";
-
     }
 
 

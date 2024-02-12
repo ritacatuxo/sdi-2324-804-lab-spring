@@ -1,10 +1,14 @@
 package com.uniovi.notaneitor.controllers;
 
+import com.uniovi.notaneitor.entities.Mark;
 import com.uniovi.notaneitor.entities.Professor;
 import com.uniovi.notaneitor.services.ProfessorsService;
+import com.uniovi.notaneitor.validators.ProfessorAddValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -12,26 +16,31 @@ public class ProfessorsController {
 
     @Autowired
     private ProfessorsService professorsService;
+    private final ProfessorAddValidator professorAddValidator;
 
-    public ProfessorsController(ProfessorsService professorsService) {
+    public ProfessorsController(ProfessorsService professorsService, ProfessorAddValidator professorAddValidator) {
         this.professorsService = professorsService;
+        this.professorAddValidator = professorAddValidator;
     }
 
     // petición de añadir
     @RequestMapping(value = "/professor/add")
-    public String getProfessor() {
+    public String getProfessor(Model model) {
+        model.addAttribute("professor", new Professor());
         return "professor/add";
     }
     @RequestMapping(value = "/professor/add", method = RequestMethod.POST)
-    public String setProfessor(@ModelAttribute Professor professor) {
+    public String setProfessor(@Validated Professor professor, BindingResult result) {
+
+        professorAddValidator.validate(professor, result);
+        //si se produce un error, redirigimos a la vista add otra vez
+        if(result.hasErrors()) {
+            return "professor/add";
+        }
+
         professorsService.addProfessor(professor);
         return "redirect:/professor/list";
     }
-
-
-
-
-
 
 
 
