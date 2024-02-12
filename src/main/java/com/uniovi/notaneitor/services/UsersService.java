@@ -49,4 +49,17 @@ public class UsersService {
     public User getUserByDni(String dni) {
         return usersRepository.findByDni(dni);
     }
+
+    public void updateUser(User user, Long id) {
+
+        User originalUser = getUser(id);
+        if(!originalUser.equals(null)) {
+            // modificar dni, nombre y apellidos
+            originalUser.setDni(user.getDni());
+            originalUser.setName(user.getName());
+            originalUser.setLastName(user.getLastName());
+            usersRepository.save(originalUser); // si el obj no existe -> lo crea. Si existe -> lo modifica
+        }
+
+    }
 }
