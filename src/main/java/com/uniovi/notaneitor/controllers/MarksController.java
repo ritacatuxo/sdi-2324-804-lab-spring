@@ -52,6 +52,9 @@ public class MarksController {
             return "mark/add";
         }
 
+        // quitar espacios de antes y después
+        mark.setDescription(mark.getDescription().trim());
+
         marksService.addMark(mark);
         return "redirect:/mark/list";
     }

@@ -39,11 +39,11 @@ public class ProfessorAddValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "surname", "Error.empty");
 
         // validaciones del dni (longitud, letra y único)
-        if (professor.getDni().replace(" ","").length() != 9){
+        if (professor.getDni().trim().length() != 9){
             errors.rejectValue("dni", "Error.professorAdd.dni.length");
         }
 
-        if(!Character.isLetter(professor.getDni().replace(" ","").charAt(professor.getDni().replace(" ","").length() - 1))){
+        if(!Character.isLetter(professor.getDni().trim().charAt(professor.getDni().trim().length() - 1))){
             errors.rejectValue("dni", "Error.professorAdd.dni.letter");
         }
         List<Professor> profs = professorsService.getProfessors();

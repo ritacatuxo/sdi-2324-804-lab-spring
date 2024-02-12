@@ -38,6 +38,12 @@ public class ProfessorsController {
             return "professor/add";
         }
 
+        // quitar espacios de antes y después
+        professor.setDni(professor.getDni().trim());
+        professor.setName(professor.getName().trim());
+        professor.setSurname(professor.getSurname().trim());
+        professor.setCategory(professor.getCategory().trim());
+
         professorsService.addProfessor(professor);
         return "redirect:/professor/list";
     }
