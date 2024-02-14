@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 
 @Configuration
 @EnableWebSecurity
@@ -30,14 +31,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/css/**", "/images/**", "/script/**", "/", "/signup", "/login/**").permitAll()
+                .antMatchers("/mark/add").hasAuthority("ROLE_PROFESSOR")
+                .antMatchers("/mark/edit/*").hasAuthority("ROLE_PROFESSOR")
+                .antMatchers("/mark/delete/*").hasAuthority("ROLE_PROFESSOR")
+                .antMatchers("/mark/**").hasAnyAuthority("ROLE_STUDENT", "ROLE_PROFESSOR", "ROLE_ADMIN")
+                .antMatchers("/user/**").hasAnyRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/login")
-                .permitAll()
-                .defaultSuccessUrl("/home")
-                .and()
+                    .loginPage("/login")
+                    .permitAll()
+                    .defaultSuccessUrl("/home")
+                    .and()
                 .logout()
                 .permitAll();
+    }
+
+    //para que con el motor de plantillas se puedan usar los atributos sec: * y los
+    // objetos de utilidad de Thymeleaf en las vistas
+    @Bean
+    public SpringSecurityDialect securityDialect() {
+        return new SpringSecurityDialect();
     }
 }

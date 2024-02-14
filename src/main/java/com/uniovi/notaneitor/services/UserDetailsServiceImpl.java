@@ -27,6 +27,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(dni);
         }
+        grantedAuthorities.add(new SimpleGrantedAuthority(user.getRole()));
         return new org.springframework.security.core.userdetails.User(
                 user.getDni(), user.getPassword(), grantedAuthorities);
     }
