@@ -17,7 +17,7 @@ import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
 
-@Controller // responde a peticiones Rest
+@Controller
 public class MarksController {
 
     // Inyectamos el servicio por inyección basada en constructor
@@ -37,10 +37,15 @@ public class MarksController {
     // un método por cada URL a la que responde el controlador
 
     @RequestMapping("/mark/list")
-    public String getList(Model model, Principal principal){
+    public String getList(Model model, Principal principal, @RequestParam(value="", required=false) String searchText){
         String dni = principal.getName(); // DNI es el name de la autenticación
         User user = usersService.getUserByDni(dni);
-        model.addAttribute("markList", marksService.getMarksForUser(user) );
+        if(searchText != null && !searchText.isEmpty()) {
+            model.addAttribute("marksList", marksService.searchMarksByDescriptionAndNameForUser(searchText, user));
+        }
+        else {
+            model.addAttribute("marksList", marksService.getMarksForUser(user) );
+        }
         return "mark/list";
     }
 
