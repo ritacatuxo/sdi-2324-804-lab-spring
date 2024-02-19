@@ -82,6 +82,12 @@ public class MarksService {
     }
 
 
+    public List<User> searchUsersByNameAndSurname( String searchText, User user) {
 
+        searchText = "%"+searchText+"%";
+        List<User> users = marksRepository.searchUsersByNameAndSurname(searchText, user);
+
+        return users;
+    }
 }
 
