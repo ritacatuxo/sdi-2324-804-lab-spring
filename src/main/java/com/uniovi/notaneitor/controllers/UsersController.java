@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.LinkedList;
 import java.util.List;
 
 @Controller
@@ -84,12 +85,11 @@ public class UsersController {
         User user = usersService.getUserByDni(dni);
         List<User> users;
         if(searchText != null && !searchText.isEmpty()) {
-            users = marksService.searchUsersByNameAndSurname(searchText, user);
+            users = usersService.searchUsersByNameAndLastName(searchText, user);
         }
         else {
             users = usersService.getUsers();
         }
-
 
         model.addAttribute("usersList", users);
         return "user/list";

@@ -32,6 +32,4 @@ public interface MarksRepository extends CrudRepository<Mark, Long> {
     @Query("UPDATE Mark SET resend = ?1 WHERE id = ?2")
     void updateResend(Boolean resend, Long id);
 
-    @Query("SELECT r FROM User r WHERE (LOWER(r.name) LIKE LOWER(?1) OR LOWER(r.lastName) LIKE LOWER(?1)) AND r = ?2")
-    List<User> searchUsersByNameAndSurname(String searchText, User user);
 }

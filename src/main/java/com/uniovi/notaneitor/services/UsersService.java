@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -61,5 +62,13 @@ public class UsersService {
             usersRepository.save(originalUser); // si el obj no existe -> lo crea. Si existe -> lo modifica
         }
 
+    }
+
+    public List<User> searchUsersByNameAndLastName(String searchText, User user) {
+
+        List<User> users = new LinkedList<User>();
+        searchText = "%"+searchText+"%";
+        users = usersRepository.searchUsersByNameAndSurname(searchText);
+        return users;
     }
 }
